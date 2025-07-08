@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stock Report - {{ ticker }}</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: #ffffff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 30px;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(15px);
+      border-radius: 18px;
+      padding: 40px;
+      max-width: 750px;
+      width: 100%;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.7s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1 {
+      font-size: 28px;
+      color: #00ffe7;
+      text-align: center;
+      margin-bottom: 20px;
+      letter-spacing: 1px;
+    }
+
+    h2 {
+      margin-top: 30px;
+      font-size: 22px;
+      color: #ffd369;
+      border-bottom: 2px solid #ffd369;
+      display: inline-block;
+      padding-bottom: 6px;
+    }
+
+    pre {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 16px;
+      border-radius: 12px;
+      border-left: 5px solid #00ffe7;
+      margin-top: 10px;
+      white-space: pre-wrap;
+      line-height: 1.5;
+    }
+
+    ul {
+      list-style-type: none;
+      margin-top: 15px;
+      padding: 0;
+    }
+
+    li {
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.08);
+      transition: background 0.3s ease;
+    }
+
+    li:hover {
+      background: rgba(0, 255, 231, 0.15);
+    }
+
+    .price {
+      color: #00ffa2;
+      font-weight: bold;
+    }
+
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 30px;
+      color: #00ffe7;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 16px;
+      transition: color 0.3s;
+    }
+
+    a:hover {
+      color: #ffffff;
+      text-shadow: 0 0 8px #00ffe7;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>📈 Analysis Report: {{ ticker }}</h1>
+
+    <h2>📘 Summary</h2>
+    <pre>{{ report }}</pre>
+
+    <h2>📊 Predicted Prices (Next 5 Days)</h2>
+    <ul>
+      {% for price in predictions %}
+        <li>Day {{ loop.index }}: <span class="price">₹{{ "%.2f"|format(price) }}</span></li>
+      {% endfor %}
+    </ul>
+
+    <a href="/">← Analyze another stock</a>
+  </div>
+</body>
+</html>

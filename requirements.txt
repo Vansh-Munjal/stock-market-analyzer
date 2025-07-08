@@ -1,0 +1,8 @@
+flask
+yfinance
+pandas
+numpy
+matplotlib
+pandas-ta
+scikit-learn
+
