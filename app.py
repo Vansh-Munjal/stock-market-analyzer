@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from utils import fetch_stock_data
 from predictor import predict_next_days
 from analyzer import analyze_trends
-from reporter import generate_report
+from models import generate_report 
 import os
 import pandas as pd
 
@@ -23,11 +23,11 @@ def home():
             # Prediction
             predictions = predict_next_days(df)
 
-            # Technical analysis and GPT summary
+            # Technical analysis + GPT-2 generated summary
             analysis = analyze_trends(df)
             report = generate_report(ticker, analysis["Trend"], analysis["RSI"], analysis["Note"])
 
-            # Last 15 days history
+            # Last 15 days of historical stock data
             recent_data = df.tail(15)[['Open', 'Close', 'High', 'Low', 'Volume']].copy()
             recent_data["Date"] = recent_data.index.strftime("%Y-%m-%d")
             history = recent_data.to_dict(orient="records")
@@ -47,7 +47,6 @@ def home():
     return render_template("index.html", charts=get_top_charts())
 
 
-# Helper function: Loads all stock charts (except prediction)
 def get_top_charts():
     chart_dir = os.path.join("static", "charts")
     if not os.path.exists(chart_dir):
