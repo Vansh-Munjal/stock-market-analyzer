@@ -5,4 +5,4 @@ numpy
 matplotlib
 pandas-ta
 scikit-learn
-
+gunicorn
