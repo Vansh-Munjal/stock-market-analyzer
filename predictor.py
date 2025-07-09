@@ -1,29 +1,28 @@
-# prediction.py
-# Uses Linear Regression to predict next 5 days closing prices
+import pandas as pd
 from sklearn.linear_model import LinearRegression
-import numpy as np
 
-def predict_next_days(df, days=5):
-    """
-    Predict future stock prices using linear regression.
-
-    Parameters:
-    - df (pd.DataFrame): DataFrame with 'Close' column
-    - days (int): Number of future days to predict
-
-    Returns:
-    - List[float]: Predicted closing prices
-    """
+def predict_next_days(df):
     df = df.copy()
-    df['day_num'] = np.arange(len(df))
+    df = df.reset_index()
 
-    X = df[['day_num']]
+    df = df[['Date', 'Close']]
+    df['Date'] = pd.to_datetime(df['Date'])
+    df['Days'] = (df['Date'] - df['Date'].min()).dt.days
+
+    X = df[['Days']]
     y = df['Close']
 
     model = LinearRegression()
     model.fit(X, y)
 
-    future_days = np.arange(len(df), len(df) + days).reshape(-1, 1)
-    predictions = model.predict(future_days)
+    # Predict next 5 days
+    last_day = df['Days'].max()
+    future_days = pd.DataFrame({'Days': [last_day + i for i in range(1, 6)]})
+    future_dates = [df['Date'].max() + pd.Timedelta(days=i) for i in range(1, 6)]
+    future_pred = model.predict(future_days)
 
-    return predictions.tolist()
+    # Return list of dicts with date and predicted price
+    return [
+        {"Date": future_dates[i].strftime("%Y-%m-%d"), "Predicted Price": round(future_pred[i], 2)}
+        for i in range(5)
+    ]

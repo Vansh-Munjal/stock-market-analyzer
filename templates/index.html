@@ -3,87 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <title>Stock Market Analyzer</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
     body {
-      font-family: 'Segoe UI', sans-serif;
-      height: 100vh;
-      background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+     background: linear-gradient(to right, #1f4037, #99f2c8);
+      min-height: 100vh;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-    .card {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(20px);
-      border-radius: 16px;
-      padding: 40px 50px;
+    .stock-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(6px);
+      border-radius: 20px;
+      transition: 0.3s ease;
+    }
+    .stock-card:hover {
+      transform: scale(1.03);
+    }
+    .card-img-top {
+      border-radius: 1rem;
+      height: 280px;
+      object-fit: contain;
+}
+
+    .analyzer-box {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(8px);
+      border-radius: 20px;
+      padding: 30px;
       width: 100%;
-      max-width: 420px;
-      text-align: center;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
-      color: white;
-    }
-
-    h1 {
-      margin-bottom: 20px;
-      font-size: 28px;
-      color: #ffffff;
-      letter-spacing: 0.5px;
-    }
-
-    input[type="text"] {
-      padding: 14px 16px;
-      width: 100%;
-      border: none;
-      border-radius: 12px;
-      margin-bottom: 20px;
-      font-size: 16px;
-      outline: none;
-    }
-
-    button {
-      background: #ffffff;
-      color: #1a1a1a;
-      padding: 12px 24px;
-      font-size: 16px;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    button:hover {
-      background: #ffd700;
-      color: #000;
-      transform: scale(1.05);
-    }
-
-    .error {
-      margin-top: 15px;
-      color: #ffdddd;
-      font-weight: bold;
+      max-width: 500px;
+      margin: auto;
     }
   </style>
 </head>
 <body>
-  <div class="card">
-    <h1>📊 Stock Market Analyzer</h1>
-    <form method="POST">
-      <input type="text" name="ticker" placeholder="Enter stock symbol (e.g. TSLA)" required />
-      <br />
-      <button type="submit">Analyze Now</button>
-    </form>
 
-    {% if error %}
-      <p class="error">{{ error }}</p>
-    {% endif %}
+  <!-- 🟣 Top Charts Section -->
+  <div class="container py-5">
+    <h2 class="text-center mb-4">📈 Top Performing Stocks</h2>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4 justify-content-center">
+      {% for chart in charts %}
+      <div class="col">
+        <div class="card stock-card shadow-lg h-100">
+          <img src="{{ url_for('static', filename='charts/' + chart.filename) }}" class="card-img-top p-3" alt="{{ chart.ticker }} Chart">
+          <div class="card-body text-center">
+            <h5 class="card-title text-white fw-bold">{{ chart.ticker }}</h5>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
   </div>
+
+  <!-- 🔻 Stock Analyzer Section -->
+  <div class="container py-5">
+    <div class="analyzer-box text-center shadow-lg">
+      <h2 class="mb-4">📊 Stock Market Analyzer</h2>
+      {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+      {% endif %}
+      <form method="POST" action="/">
+        <div class="mb-3">
+          <input type="text" name="ticker" class="form-control form-control-lg" placeholder="Enter stock symbol (e.g. TSLA)" required>
+        </div>
+        <button type="submit" class="btn btn-success btn-lg px-4">Analyze Now</button>
+      </form>
+    </div>
+  </div>
+
 </body>
 </html>
